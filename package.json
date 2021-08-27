@@ -1,0 +1,17 @@
+{
+    "name": "@snyk/cli-protect-upgrade",
+    "bin": {
+        "@snyk/cli-protect-upgrade": "bin/cli-protect-upgrade"
+    },
+    "files": [
+        "bin",
+        "index.js"
+    ],
+    "description": "Upgrade `snyk protect` into the new `@snyk/protect`",
+    "version": "1.0.0",
+    "author": "snyk.io",
+    "license": "Apache-2.0",
+    "scripts": {},
+    "dependencies": {},
+    "devDependencies": {}
+}
