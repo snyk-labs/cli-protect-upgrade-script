@@ -37,14 +37,13 @@ function executeCommand(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
       const error = stderr.trim();
+      if (error) {
+        console.error(`inner stderr received from ${cmd}: `, error);
+        console.error(error);
+      }
       if (err) {
         return reject(err);
       }
-      // if (error) {
-      //   if (!error.includes('Debugger attached.')) {
-      //     // return reject(new Error(error + ' / ' + cmd));
-      //   }
-      // }
       resolve(stdout.split('\n').join(''));
     });
   });
