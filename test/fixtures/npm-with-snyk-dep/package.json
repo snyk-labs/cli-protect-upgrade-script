@@ -1,5 +1,5 @@
 {
-  "name": "package-with-snyk-dep",
+  "name": "npm-with-snyk-dep",
   "version": "1.0.0",
   "scripts": {
     "snyk-protect": "snyk protect",
