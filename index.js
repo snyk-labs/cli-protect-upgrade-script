@@ -8,7 +8,7 @@ function exitWithMessage(message, code = 0) {
 }
 
 async function detectYarnOrNpm() {
-  const files = await fs.readdirSync(__dirname);
+  const files = await fs.readdirSync(process.cwd());
   const isItNodeProject = files.some((f) => f === 'package.json');
   if (!isItNodeProject) {
     return;
@@ -20,7 +20,7 @@ async function detectYarnOrNpm() {
 
 async function detectSnykInDependencies() {
   const { dependencies, devDependencies } = JSON.parse(
-    fs.readFileSync('package.json', 'utf8')
+    fs.readFileSync('package.json', 'utf8'),
   );
   if (
     (dependencies && Object.keys(dependencies).some((d) => d === 'snyk')) ||
@@ -37,9 +37,14 @@ function executeCommand(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
       const error = stderr.trim();
-      if (error) {
-        return reject(new Error(error + ' / ' + cmd));
+      if (err) {
+        return reject(err);
       }
+      // if (error) {
+      //   if (!error.includes('Debugger attached.')) {
+      //     // return reject(new Error(error + ' / ' + cmd));
+      //   }
+      // }
       resolve(stdout.split('\n').join(''));
     });
   });
@@ -63,7 +68,7 @@ async function installSnykProtect(packageManager) {
 
 async function isSnykProtectNeeded(packageManager) {
   const snykProtectOutput = await executeCommand(
-    `${packageManager === 'npm' ? 'npx' : 'yarn run'} snyk-protect`
+    `${packageManager === 'npm' ? 'npx' : 'yarn run'} snyk-protect`,
   );
   if (
     snykProtectOutput.includes('No .snyk file found') ||
@@ -80,14 +85,14 @@ async function run() {
   if (!packageManager) {
     return exitWithMessage(
       'No package.json. You need to run this command only in a folder with an npm or yarn project',
-      1
+      1,
     );
   }
   const snykPackageFound = await detectSnykInDependencies();
   if (!snykPackageFound) {
     return exitWithMessage(
       'There is no `snyk` package listed as a dependency. Nothing to upgrade.',
-      0
+      0,
     );
   }
 
@@ -99,7 +104,7 @@ async function run() {
     'package.json',
     fs
       .readFileSync('package.json', 'utf8')
-      .replace('snyk protect', 'snyk-protect')
+      .replace('snyk protect', 'snyk-protect'),
   );
 
   if (await isSnykProtectNeeded(packageManager)) {
@@ -107,7 +112,7 @@ async function run() {
       `All done. Review and commit the changes to package.json and ${
         packageManager === 'npm' ? 'package-lock.json' : 'yarn.lock'
       }.`,
-      0
+      0,
     );
   }
 
@@ -115,7 +120,7 @@ async function run() {
     `All done. But we've detected that Snyk Protect is not patching anything. Review and commit the changes to package.json and ${
       packageManager === 'npm' ? 'package-lock.json' : 'yarn.lock'
     }.`,
-    0
+    0,
   );
 }
 
