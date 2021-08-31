@@ -54,17 +54,19 @@ describe('cli-protect-upgrade-script', () => {
         '@snyk/protect',
         'dependencies',
       );
-      expect(packageLockObj.packages).toHaveProperty(
-        'node_modules/@snyk/protect',
-      );
+      if (packageLockObj.lockfileVersion === 2) {
+        expect(packageLockObj.packages).toHaveProperty(
+          'node_modules/@snyk/protect',
+        );
+      }
 
       expect(stdout).toMatchLines([
         'Checking package.json project in the current directory.',
         'Removing snyk package from dependencies.',
         'Running command: npm uninstall snyk',
+        'Updating package.json file.',
         'Adding @snyk/protect package to dependencies.',
         'Running command: npm install @snyk/protect@latest',
-        'Updating package.json file.',
         'Running command: npx snyk-protect',
         "All done. But we've detected that Snyk Protect is not patching anything. Review and commit the changes to package.json and package-lock.json.",
       ]);
@@ -81,7 +83,7 @@ describe('cli-protect-upgrade-script', () => {
       const initialPackageJson = await testFixture.packageJsonObj();
       expect(initialPackageJson).toContainDependencyIn('snyk', 'dependencies');
 
-      const { code, stdout } = await testFixture.execUpgradeScript();
+      const { code, stdout, stderr } = await testFixture.execUpgradeScript();
       expect(code).toBe(0);
 
       const packageJsonObj = await testFixture.packageJsonObj();
@@ -104,9 +106,9 @@ describe('cli-protect-upgrade-script', () => {
         'Checking package.json project in the current directory.',
         'Removing snyk package from dependencies.',
         'Running command: yarn remove snyk',
+        'Updating package.json file.',
         'Adding @snyk/protect package to dependencies.',
         'Running command: yarn add @snyk/protect@latest',
-        'Updating package.json file.',
         'Running command: yarn run snyk-protect',
         "All done. But we've detected that Snyk Protect is not patching anything. Review and commit the changes to package.json and yarn.lock.",
       ]);

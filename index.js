@@ -96,7 +96,6 @@ async function run() {
   }
 
   await uninstallSnyk(packageManager);
-  await installSnykProtect(packageManager);
 
   console.info('Updating package.json file.');
   fs.writeFileSync(
@@ -105,6 +104,8 @@ async function run() {
       .readFileSync('package.json', 'utf8')
       .replace('snyk protect', 'snyk-protect'),
   );
+
+  await installSnykProtect(packageManager);
 
   if (await isSnykProtectNeeded(packageManager)) {
     return exitWithMessage(
