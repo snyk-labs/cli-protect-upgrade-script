@@ -1,0 +1,12 @@
+{
+  "name": "yarn-with-snyk-dep",
+  "version": "1.0.0",
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "dependencies": {
+    "semver": "^3.0.0",
+    "snyk": "^1.650.0"
+  }
+}
