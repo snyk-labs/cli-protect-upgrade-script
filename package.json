@@ -16,6 +16,10 @@
     "format": "prettier --write '**/*.{js,ts,json,yaml,yml,md}'",
     "lint:formatting": "prettier --check '**/*.{js,ts,json,yaml,yml,md}'"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snyk-labs/cli-protect-upgrade-script.git"
+  },
   "devDependencies": {
     "@types/fs-extra": "^9.0.12",
     "@types/jest": "^27.0.1",
